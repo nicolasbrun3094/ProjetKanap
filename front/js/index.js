@@ -23,7 +23,7 @@ const sofaDispaly = async () => {
                 Dis enim malesuada risus sapien gravida nulla nisl arcu.
                 Dis enim malesuada risus sapien gravida nulla nisl arcu.
               </p>
-              <p class=""price>  
+              <p class="price">  
                 ${sofa.price} Є
               </p>
           </article>

@@ -22,7 +22,7 @@ const fetchSofa = async () => {
     .then((res) => res.json())
     .then((data) => (sofaData = data));
 
-  console.log(sofaData);
+  //console.log(sofaData);
 };
 
 // Affichage du produit //
@@ -74,14 +74,11 @@ const sofaDisplay = async () => {
       let btn_open = document.querySelector(".btn_show");
       let btn_close = document.querySelector("#btn_close");
       let btn_basket = document.querySelector("#btn_close2");
-      let main = document.querySelector(".main"); // opacity
 
-      modal.show();
-      modal.style.opacity = 1;
+      modal.showModal();
 
       setTimeout(function () {
         modal.close();
-        main.style.opacity = 1; // opacity
       }, 30000); // COMPTE À REBOUR +?
 
       btn_close.addEventListener("click", () => {
@@ -95,12 +92,17 @@ const sofaDisplay = async () => {
       });
 
       // Envoi des donnés au local storage //
+
+      let kanapCommand = localStorage.getItem("Kanap Cyllène|Black/Yellow");
+      console.log(kanapCommand);
+
       localStorage.setItem(
         // Recuperer l'option selectionner //
-        sofaData.name + color.value,
+        sofaData.name + "|" + color.value,
         JSON.stringify({
           id: sofaData._id,
           name: sofaData.name,
+          img: sofaData.imageUrl,
           color: color.value,
           nbArticle: quantity.value,
         })
@@ -110,6 +112,7 @@ const sofaDisplay = async () => {
 };
 sofaDisplay();
 
+// Le
 // BONUS //
 /*
 AJOUT D'UNE PASTILLE ROUGE AU NIVEAU DU PANIER
