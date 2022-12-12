@@ -1,6 +1,9 @@
 function redirectionIndex() {
   document.location.href = "./index.html";
 }
+function redirectionBasket() {
+  document.location.href = "./cart.html";
+}
 
 const img = document.querySelector(".item__img");
 const price = document.getElementById("price");
@@ -70,15 +73,25 @@ const sofaDisplay = async () => {
       let modal = document.querySelector("#modal");
       let btn_open = document.querySelector(".btn_show");
       let btn_close = document.querySelector("#btn_close");
+      let btn_basket = document.querySelector("#btn_close2");
+      let main = document.querySelector(".main"); // opacity
 
       modal.show();
+      modal.style.opacity = 1;
+
       setTimeout(function () {
         modal.close();
-      }, 10000);
+        main.style.opacity = 1; // opacity
+      }, 30000); // COMPTE À REBOUR +?
 
       btn_close.addEventListener("click", () => {
         modal.close();
         redirectionIndex();
+      });
+
+      btn_basket.addEventListener("click", () => {
+        modal.close();
+        redirectionBasket();
       });
 
       // Envoi des donnés au local storage //
@@ -101,3 +114,5 @@ sofaDisplay();
 /*
 AJOUT D'UNE PASTILLE ROUGE AU NIVEAU DU PANIER
 */
+
+// CIBLER MODAL POUR QUE IL SOIT TOUJOURS AU CENTRE DE LA PAGE

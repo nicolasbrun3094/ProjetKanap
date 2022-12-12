@@ -91,9 +91,54 @@
   box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
 }
 
+.btn_container {
+  display: flex;
+}
+
 #modal {
   width: 50%;
-  border: 1px solid black;
+  border: 1px solid white;
+  border-radius: 25px;
+  background-color: rgb(44, 62, 81);
+  position: absolute;
+  transition: 0.3s ease-in-out;
+  position: sticky;
+  margin-top: 50px;
+}
+
+#modal:hover {
+  box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
+}
+
+#modal h1 {
+  color: white;
+  text-align: center;
+  font-size: 2em;
+}
+
+#modal p {
+  color: white;
+  text-align: center;
+}
+
+#btn_close,
+#btn_close2 {
+  display: flex;
+  margin: 10px auto;
+  border-radius: 1500px;
+  color: white;
+  background-color: #3498db;
+  font-size: 1.4em;
+  padding-right: 25px;
+  padding-left: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: 1px solid white;
+}
+
+#btn_close:hover,
+#btn_close2:hover {
+  box-shadow: rgba(75, 56, 199, 0.769) 0 0 22px 6px;
 }
 
 /***************/
