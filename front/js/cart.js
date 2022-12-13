@@ -89,6 +89,8 @@ const emailChecker = (value) => {
 // RÉCUPÉRATION DU LOCAL STORAGE //
 
 let product = [];
+let totalQuantity = document.getElementById("totalQuantity");
+let totalPrice = document.getElementById("totalPrice");
 
 function localSProduct() {
   const numberProduct = localStorage.length;
@@ -104,15 +106,44 @@ function localSProduct() {
 console.log(product);
 
 // AFFICHAGE DU / DES PRODUITS SÉLECTIONNER
-const cartItem = document.getElementById("cart__items"); // document.querySelector(".cart");
+/*
+
+<div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                      <p>Qté : </p>
+                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+                    </div>
+
+*/
+const cartItem = document.querySelector("#cart__items");
 const sofaDisplay = () => {
   localSProduct();
-  cartItem.innerHTML += product;
-  (sofa) =>
-    `
-    <img src=${sofa.img}>
-  `;
-
+  cartItem.innerHTML += product
+    .map(
+      (sofa) =>
+        `
+      <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+        <div class="cart__item__img">
+          <img src=${sofa.img} alt="photo de ${sofa.name}">
+        </div>
+        <div class="cart__item__content">
+          <h2>${sofa.name}</h2>
+          <p>${sofa.color}</p>
+          <p> API PRIX </p>
+        </div>
+        <div class="cart__item__content__settings">
+          <div class="cart__item__content__settings__quantity">
+            <p>QTE :</p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${sofa.nbArticle}>
+          </div>
+          <div class="cart__item__content__settings__delete">
+            <p class="deleteItem">Supprimer</p>
+          </div>
+        </div>
+      </article>
+  `
+    )
+    .join("");
   // Pointé les balises
   //cartItem.innerHTML = `<img src=${product.img}</img>`;
 };

@@ -93,8 +93,10 @@ const sofaDisplay = async () => {
 
       // Envoi des donnés au local storage //
 
+      /*
       let kanapCommand = localStorage.getItem("Kanap Cyllène|Black/Yellow");
       console.log(kanapCommand);
+      */
 
       localStorage.setItem(
         // Recuperer l'option selectionner //
@@ -117,5 +119,3 @@ sofaDisplay();
 /*
 AJOUT D'UNE PASTILLE ROUGE AU NIVEAU DU PANIER
 */
-
-// CIBLER MODAL POUR QUE IL SOIT TOUJOURS AU CENTRE DE LA PAGE
