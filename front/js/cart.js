@@ -1,6 +1,6 @@
 // ---------------- REGEX DES INPUTS ---------------- //
 
-// ---- Ciblag de tous les inputs. ---- //
+// ---- Ciblag de tous les inputs ---- //
 const inputs = document.querySelectorAll(
   'input[type="text"], input[type="email"]'
 );
@@ -94,14 +94,17 @@ const emailChecker = (value) => {
 let cart = JSON.parse(localStorage.getItem("cartObject"));
 console.log(cart);
 
+// ---- Ciblage + création des sommes du total panier ----//
 let articles = document.querySelector("#cart__items");
 let totalPrice = document.querySelector("#totalPrice");
 let totalQuantity = document.querySelector("#totalQuantity");
 let totalArticlesPrice = 0;
 let totalArticlesQuantity = 0;
 
+// ---- Création de la boucle pour tout les articles présent  ---- //
 async function cartDisplay() {
   for (let i = 0; i < cart.length; i++) {
+    // ---- Prix par rapport à ID produit ---- //
     let price = await productId(cart[i].id);
 
     // ---- Implémentation de la quantité & l'obtention du prix total ---- //
@@ -135,6 +138,9 @@ async function cartDisplay() {
 
     totalPrice.innerHTML = totalArticlesPrice;
     totalQuantity.innerHTML = totalArticlesQuantity;
+
+    deleteProduct();
+    uptQuantity();
   }
 }
 cartDisplay();
@@ -158,6 +164,15 @@ async function productId(prdId) {
     });
 }
 
+// ---------------- SUPPRESSION DE L'ARTICLE ---------------- //
+function deleteProduct() {}
+
+// ---------------- MISE À JOUR QUANTITÉ ---------------- //
+function uptQuantity() {}
+
+// ---------------- MISE À JOUR PANIER ---------------- //
+function uptBasket() {}
+
 //---------------------------------------//
 
 // Si panier vide ? Message ? -> oui .lenght = alert
@@ -166,5 +181,6 @@ async function productId(prdId) {
 // Additionner OK
 // Cibler les id totalQuantity & totalPrice pour injecter le resultat OK
 // Action lors du click sur le btn commander / envoi au local ou API ?
+// Page CONFIRM ->
 
 //---------------------------------------//

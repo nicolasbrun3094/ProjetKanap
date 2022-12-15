@@ -1,3 +1,5 @@
+// ---- Fonction de redirection vers les pages cible ----//
+
 function redirectionIndex() {
   document.location.href = "./index.html";
 }
@@ -15,17 +17,15 @@ let sofaData = [];
 let params = new URL(document.location).searchParams;
 let id = params.get("productid");
 
-// Affichage API //
+// -------- IMPORTATION DE L'API -------- //
 
 const fetchSofa = async () => {
   await fetch(`http://localhost:3000/api/products/${id}`)
     .then((res) => res.json())
     .then((data) => (sofaData = data));
-
-  //console.log(sofaData);
 };
 
-// Affichage du produit //
+// -------- AFFICHAGE DU PRODUIT -------- //
 
 const sofaDisplay = async () => {
   await fetchSofa();
@@ -44,7 +44,7 @@ const sofaDisplay = async () => {
     selectColor += color.innerHTML += `<option value="${c}">${c}</option>`;
   });
 
-  // Verification qu'une couleur à bien était séléctioner //
+  // ---- Verification qu'une couleur à bien était séléctioner ---- //
   function checkColor() {
     let color = document.querySelector("#colors").value;
 
@@ -55,7 +55,7 @@ const sofaDisplay = async () => {
     return true;
   }
 
-  // Verification que la quantité ne soit pas inférieur à 1//
+  // ---- Verification que la quantité ne soit pas inférieur à 1 ---- //
 
   function checkQuantity() {
     let value = document.querySelector("#quantity").value;
@@ -68,6 +68,7 @@ const sofaDisplay = async () => {
     return true;
   }
 
+  // ---- Ajout de l'événement au click ---- //
   button.addEventListener("click", (e) => {
     if (checkColor() && checkQuantity()) {
       let modal = document.querySelector("#modal");
@@ -75,11 +76,12 @@ const sofaDisplay = async () => {
       let btn_close = document.querySelector("#btn_close");
       let btn_basket = document.querySelector("#btn_close2");
 
-      modal.showModal();
+      // ---- Ouverture / Fermeture de la "Pop-Up" de redirection ---- //
+      modal.showModal(); // showModal permet d'appliquer du style à cette dernière
 
       setTimeout(function () {
         modal.close();
-      }, 30000); // COMPTE À REBOUR +?
+      }, 30000);
 
       btn_close.addEventListener("click", () => {
         modal.close();
@@ -91,26 +93,31 @@ const sofaDisplay = async () => {
         redirectionBasket();
       });
 
-      // Envoi des donnés au local storage //
+      // ---- GESTION DES DONNÉES DU LOCAL STORAGE ---- //
 
       let cartProduct = [];
 
+      // Contient les propriétés assigné du produit
       const item = {
         id: sofaData._id,
         name: sofaData.name,
         img: sofaData.imageUrl,
         color: color.value,
-        nbArticle: parseInt(quantity.value),
+        nbArticle: parseInt(quantity.value), // Permet de converting un "string" en nombre entier.
         altTxt: sofaData.altTxt,
       };
 
+      // ---- Local Storage en cours (dynamique) ---- //
       let currentLocal = localStorage.getItem("cartObject") || [];
 
+      // ---- Condition pour ajouter un article si inférieur à 1 donc 0 ---- //
       if (currentLocal.length < 1) {
         currentLocal.push(item);
         localStorage.setItem("cartObject", JSON.stringify(currentLocal));
       } else {
-        currentLocal = JSON.parse(localStorage.getItem("cartObject"));
+        currentLocal = JSON.parse(localStorage.getItem("cartObject")); // .parse analyse une chaine de caractère et la renvoi en chaîne / format JSON
+
+        // ---- Condition comparant "id" & "color" afin de savoir si il ajoute en quantité ou crée une nouvelle valeur. ---- //
         for (let i = 0; i < currentLocal.length; i++) {
           if (
             currentLocal[i].id == item.id &&
