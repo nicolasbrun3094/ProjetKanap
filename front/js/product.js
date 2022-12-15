@@ -93,29 +93,38 @@ const sofaDisplay = async () => {
 
       // Envoi des donnés au local storage //
 
-      /*
-      let kanapCommand = localStorage.getItem("Kanap Cyllène|Black/Yellow");
-      console.log(kanapCommand);
-      */
+      let cartProduct = [];
 
-      localStorage.setItem(
-        // Recuperer l'option selectionner //
-        sofaData.name + "|" + color.value,
-        JSON.stringify({
-          id: sofaData._id,
-          name: sofaData.name,
-          img: sofaData.imageUrl,
-          color: color.value,
-          nbArticle: quantity.value,
-        })
-      );
+      const item = {
+        id: sofaData._id,
+        name: sofaData.name,
+        img: sofaData.imageUrl,
+        color: color.value,
+        nbArticle: parseInt(quantity.value),
+        altTxt: sofaData.altTxt,
+      };
+
+      let currentLocal = localStorage.getItem("cartObject") || [];
+
+      if (currentLocal.length < 1) {
+        currentLocal.push(item);
+        localStorage.setItem("cartObject", JSON.stringify(currentLocal));
+      } else {
+        currentLocal = JSON.parse(localStorage.getItem("cartObject"));
+        for (let i = 0; i < currentLocal.length; i++) {
+          if (
+            currentLocal[i].id == item.id &&
+            currentLocal[i].color == item.color
+          ) {
+            currentLocal[i].nbArticle += parseInt(item.nbArticle);
+            localStorage.setItem("cartObject", JSON.stringify(currentLocal));
+            return;
+          }
+        }
+        currentLocal.push(item);
+        localStorage.setItem("cartObject", JSON.stringify(currentLocal));
+      }
     }
   });
 };
 sofaDisplay();
-
-// Le
-// BONUS //
-/*
-AJOUT D'UNE PASTILLE ROUGE AU NIVEAU DU PANIER
-*/

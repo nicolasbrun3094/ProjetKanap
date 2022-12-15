@@ -71,6 +71,7 @@ h2 {
 .cart__item__content__settings__delete p:hover {
   cursor: pointer;
   font-weight: 700;
+  color: rgb(250, 94, 94);
 }
 
 /*******/

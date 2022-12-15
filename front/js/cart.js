@@ -1,9 +1,11 @@
+// ---------------- REGEX DES INPUTS ---------------- //
+
+// ---- Ciblag de tous les inputs. ---- //
 const inputs = document.querySelectorAll(
   'input[type="text"], input[type="email"]'
 );
 
-// REGEX DES INPUTS //
-
+// ---- Checking des valeurs rentrer dans l'input---- //
 inputs.forEach((input) => {
   input.addEventListener("input", (e) => {
     switch (e.target.id) {
@@ -29,10 +31,10 @@ inputs.forEach((input) => {
   });
 });
 
-// OPTIMISER LE CODE CI DESSOUS //
-// const errorDisplay = ?
+// ---- Logique et fonctionnement des REGEX ---- //
+
 const firstNameChecker = (value) => {
-  const errorDisplay = document.getElementById("firstNameErrorMsg"); //DYNAMIQUE ?
+  const errorDisplay = document.getElementById("firstNameErrorMsg");
   if (value.length > 0 && (value.length < 2 || value.length > 20)) {
     errorDisplay.textContent =
       "Veuillez entrer un prénom entre 2 et 20 lettres";
@@ -45,7 +47,7 @@ const firstNameChecker = (value) => {
 };
 
 const lastNameChecker = (value) => {
-  const errorDisplay = document.getElementById("lastNameErrorMsg"); //DYNAMIQUE ?
+  const errorDisplay = document.getElementById("lastNameErrorMsg");
   if (value.length > 0 && (value.length < 2 || value.length > 20)) {
     errorDisplay.textContent =
       "Veuillez entrer un nom de famille entre 2 et 20 lettres";
@@ -58,7 +60,7 @@ const lastNameChecker = (value) => {
 };
 
 const addressChecker = (value) => {
-  const errorDisplay = document.getElementById("addressErrorMsg"); //DYNAMIQUE ?
+  const errorDisplay = document.getElementById("addressErrorMsg");
   if (value.length > 0 && value.length < 3) {
     errorDisplay.textContent = "Veuillez saisir plus de cartères";
   } else if (!value.match(/^[a-zA-Z0-9 éè]*$/)) {
@@ -69,7 +71,7 @@ const addressChecker = (value) => {
 };
 
 const cityChecker = (value) => {
-  const errorDisplay = document.getElementById("cityErrorMsg"); //DYNAMIQUE ?
+  const errorDisplay = document.getElementById("cityErrorMsg");
   if (!value.match(/^[a-zA-Z0-9 éè]*$/)) {
     errorDisplay.textContent = "Veuillez ne pas inclure caractères spéciaux ";
   } else {
@@ -78,7 +80,7 @@ const cityChecker = (value) => {
 };
 
 const emailChecker = (value) => {
-  const errorDisplay = document.getElementById("emailErrorMsg"); //DYNAMIQUE ?
+  const errorDisplay = document.getElementById("emailErrorMsg");
   if (!value.match(/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)) {
     errorDisplay.textContent = "Veuillez saisir une adresse mail correcte";
   } else {
@@ -86,68 +88,83 @@ const emailChecker = (value) => {
   }
 };
 
-// RÉCUPÉRATION DU LOCAL STORAGE //
+// ---------------- RÉCUPÉRATION DU LOCAL STORAGE ---------------- //
 
-let product = [];
-let totalQuantity = document.getElementById("totalQuantity");
-let totalPrice = document.getElementById("totalPrice");
+// ---- Converti la chaine de caractère objet JS ---- //
+let cart = JSON.parse(localStorage.getItem("cartObject"));
+console.log(cart);
 
-function localSProduct() {
-  const numberProduct = localStorage.length;
-  //console.log(numberProduct);
-  for (let i = 0; i < numberProduct; i++) {
-    const item = localStorage.getItem(localStorage.key(i));
-    //console.log(item);
-    const itemObject = JSON.parse(item);
-    //console.log(itemObject);
-    product.push(itemObject);
+let articles = document.querySelector("#cart__items");
+let totalPrice = document.querySelector("#totalPrice");
+let totalQuantity = document.querySelector("#totalQuantity");
+let totalArticlesPrice = 0;
+let totalArticlesQuantity = 0;
+
+async function cartDisplay() {
+  for (let i = 0; i < cart.length; i++) {
+    let price = await productId(cart[i].id);
+
+    // ---- Implémentation de la quantité & l'obtention du prix total ---- //
+    totalArticlesQuantity += parseInt(cart[i].nbArticle);
+    totalArticlesPrice += parseInt(cart[i].nbArticle * price);
+
+    // ---- Injection des différents produits dans le HTML / Prix / Quantité ---- //
+    let article = `<article class="cart__item" data-id="${cart[i].id}" data-color="${cart[i].color}">
+                  <div class="cart__item__img">
+                    <img src="${cart[i].img}" alt="${cart[i].altTxt}">
+                  </div>
+                  <div class="cart__item__content">
+                    <div class="cart__item__content__description">
+                      <h2>${cart[i].name}</h2>
+                      <p>Vert</p>
+                      <p>${price} €</p>
+                    </div>
+                    <div class="cart__item__content__settings">
+                      <div class="cart__item__content__settings__quantity">
+                        <p>Qté : </p>
+                        <input  data-id="${cart[i].id}" data-color="${cart[i].color}" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cart[i].nbArticle}">
+                      </div>
+                      <div class="cart__item__content__settings__delete">
+                        <p  data-id="${cart[i].id}" data-color="${cart[i].color}" class="deleteItem">Supprimer</p>
+                      </div>
+                    </div>
+                  </div>
+                </article>`;
+
+    articles.innerHTML += article;
+
+    totalPrice.innerHTML = totalArticlesPrice;
+    totalQuantity.innerHTML = totalArticlesQuantity;
   }
 }
-console.log(product);
+cartDisplay();
 
-// AFFICHAGE DU / DES PRODUITS SÉLECTIONNER
-/*
+// On récupère le prix de l'article suivant son id dans la l'API
+async function productId(prdId) {
+  return fetch("http://localhost:3000/api/products/")
+    .then(function (res) {
+      return res.json();
+    })
+    .catch((err) => {
+      // Prévenir en cas d'erreur de chargement de l'API
+      console.log("erreur");
+    })
+    .then((response) => {
+      for (let i = 0; i < response.length; i++) {
+        if (response[i]._id == prdId) {
+          return response[i].price;
+        }
+      }
+    });
+}
 
-<div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-                    </div>
+//---------------------------------------//
 
-*/
-const cartItem = document.querySelector("#cart__items");
-const sofaDisplay = () => {
-  localSProduct();
-  cartItem.innerHTML += product
-    .map(
-      (sofa) =>
-        `
-      <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-        <div class="cart__item__img">
-          <img src=${sofa.img} alt="photo de ${sofa.name}">
-        </div>
-        <div class="cart__item__content">
-          <h2>${sofa.name}</h2>
-          <p>${sofa.color}</p>
-          <p> API PRIX </p>
-        </div>
-        <div class="cart__item__content__settings">
-          <div class="cart__item__content__settings__quantity">
-            <p>QTE :</p>
-            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${sofa.nbArticle}>
-          </div>
-          <div class="cart__item__content__settings__delete">
-            <p class="deleteItem">Supprimer</p>
-          </div>
-        </div>
-      </article>
-  `
-    )
-    .join("");
-  // Pointé les balises
-  //cartItem.innerHTML = `<img src=${product.img}</img>`;
-};
+// Si panier vide ? Message ? -> oui .lenght = alert
+// Modification de la quantité lors d'un keypress event sur input de type number ? Totalité des articles ou juste un -1 ? attention nmbr négatif
+// Obtention du prix via l'api -> fetch ? -> pour injecter le prix ? OK
+// Additionner OK
+// Cibler les id totalQuantity & totalPrice pour injecter le resultat OK
+// Action lors du click sur le btn commander / envoi au local ou API ?
 
-sofaDisplay();
-
-// ADDITION LORS DE L'AJOUT AU PANIER PLUTOT QUE ÉCRASER ?
+//---------------------------------------//
