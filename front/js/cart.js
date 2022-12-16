@@ -108,8 +108,8 @@ async function cartDisplay() {
     let price = await productId(cart[i].id);
 
     // ---- Implémentation de la quantité & l'obtention du prix total ---- //
-    totalArticlesQuantity += parseInt(cart[i].nbArticle);
-    totalArticlesPrice += parseInt(cart[i].nbArticle * price);
+    totalArticlesQuantity += parseInt(cart[i].quantity);
+    totalArticlesPrice += parseInt(cart[i].quantity * price);
     console.log(totalArticlesPrice);
 
     // ---- Injection des différents produits dans le HTML / Prix / Quantité ---- //
@@ -126,7 +126,7 @@ async function cartDisplay() {
                     <div class="cart__item__content__settings">
                       <div class="cart__item__content__settings__quantity">
                         <p>Qté : </p>
-                        <input  data-id="${cart[i].id}" data-color="${cart[i].color}" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cart[i].nbArticle}">
+                        <input  data-id="${cart[i].id}" data-color="${cart[i].color}" type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cart[i].quantity}">
                       </div>
                       <div class="cart__item__content__settings__delete">
                         <p  data-id="${cart[i].id}" data-color="${cart[i].color}" class="deleteItem">Supprimer</p>
@@ -141,7 +141,7 @@ async function cartDisplay() {
     totalQuantity.innerHTML = totalArticlesQuantity;
 
     deleteProduct();
-    uptQuantity();
+    updateQuantity();
   }
 }
 cartDisplay();
@@ -165,10 +165,52 @@ async function productId(prdId) {
 function deleteProduct() {}
 
 // ---------------- MISE À JOUR QUANTITÉ ---------------- //
-function uptQuantity() {}
+function updateQuantity() {
+  const quantityInputs = document.querySelectorAll(".itemQuantity");
+  quantityInputs.forEach((quantityInput) => {
+    quantityInput.addEventListener("change", (event) => {
+      event.preventDefault();
+      const inputValue = event.target.value;
+      const dataId = event.target.getAttribute("data-id");
+      const dataColor = event.target.getAttribute("data-color");
+      let cartItems = localStorage.getItem("cartObject");
+      let items = JSON.parse(cartItems);
+
+      items = items.map((item) => {
+        if (item.id === dataId && item.color === dataColor) {
+          item.quantity = inputValue;
+        }
+        return item;
+      });
+
+      if (inputValue > 100 || inputValue < 1) {
+        alert("La quantité doit etre comprise entre 1 et 100");
+        return;
+      }
+      let itemsStr = JSON.stringify(items);
+      localStorage.setItem("cartObject", itemsStr);
+      updateBasket();
+    });
+  });
+}
 
 // ---------------- MISE À JOUR PANIER ---------------- //
-function uptBasket() {}
+async function updateBasket() {
+  let cartItem = JSON.parse(localStorage.getItem("cartObject"));
+  let totalQuantity = 0;
+  let totalPrice = 0;
+
+  for (i = 0; i < cartItem.length; i++) {
+    let price = await productId(cart[i].id);
+    totalQuantity += parseInt(cartItem[i].quantity);
+    totalPrice += parseInt(price * cartItem[i].quantity);
+  }
+
+  console.log(totalPrice);
+
+  document.getElementById("totalQuantity").innerHTML = totalQuantity;
+  document.getElementById("totalPrice").innerHTML = totalPrice;
+}
 
 // ---------------- SI PANIER VIDE ---------------- //
 // ---- Fonction de redirection vers l'accueil ---- //

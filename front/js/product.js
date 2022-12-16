@@ -103,7 +103,7 @@ const sofaDisplay = async () => {
         name: sofaData.name,
         img: sofaData.imageUrl,
         color: color.value,
-        nbArticle: parseInt(quantity.value), // Permet de converting un "string" en nombre entier.
+        quantity: parseInt(quantity.value), // Permet de converting un "string" en nombre entier.
         altTxt: sofaData.altTxt,
       };
 
@@ -123,7 +123,7 @@ const sofaDisplay = async () => {
             currentLocal[i].id == item.id &&
             currentLocal[i].color == item.color
           ) {
-            currentLocal[i].nbArticle += parseInt(item.nbArticle);
+            currentLocal[i].quantity += parseInt(item.quantity);
             localStorage.setItem("cartObject", JSON.stringify(currentLocal));
             return;
           }
