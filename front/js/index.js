@@ -1,14 +1,14 @@
 const section = document.getElementById("items");
 let sofaData = [];
 
-// Importation API
+// ---------------- IMPORTATION DE L'API ---------------- //
 const fetchSofa = async () => {
   await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .then((data) => (sofaData = data));
 };
 
-// Affichage des produits
+// ---------------- AFFICHAGE DES PRODUITS ---------------- //
 const sofaDispaly = async () => {
   await fetchSofa();
   section.innerHTML += sofaData

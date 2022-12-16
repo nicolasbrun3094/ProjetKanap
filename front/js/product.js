@@ -1,4 +1,4 @@
-// ---- Fonction de redirection vers les pages cible ----//
+// ---------------- FONCTION DE REDIRECTION VERS LES PAGES CIBLES ---------------- //
 
 function redirectionIndex() {
   document.location.href = "./index.html";
@@ -17,7 +17,7 @@ let sofaData = [];
 let params = new URL(document.location).searchParams;
 let id = params.get("productid");
 
-// -------- IMPORTATION DE L'API -------- //
+// ---------------- IMPORTATION DE L'API ----------------//
 
 const fetchSofa = async () => {
   await fetch(`http://localhost:3000/api/products/${id}`)
@@ -25,7 +25,7 @@ const fetchSofa = async () => {
     .then((data) => (sofaData = data));
 };
 
-// -------- AFFICHAGE DU PRODUIT -------- //
+// ---------------- AFFICHAGE DU PRODUIT ---------------- //
 
 const sofaDisplay = async () => {
   await fetchSofa();
@@ -93,7 +93,7 @@ const sofaDisplay = async () => {
         redirectionBasket();
       });
 
-      // ---- GESTION DES DONNÉES DU LOCAL STORAGE ---- //
+      // ---------------- GESTION DES DONNÉES DU LOCAL STORAGE ---------------- //
 
       let cartProduct = [];
 

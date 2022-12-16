@@ -1,6 +1,6 @@
 // ---------------- REGEX DES INPUTS ---------------- //
 
-// ---- Ciblag de tous les inputs ---- //
+// ---- Ciblage de tous les inputs ---- //
 const inputs = document.querySelectorAll(
   'input[type="text"], input[type="email"]'
 );
@@ -110,6 +110,7 @@ async function cartDisplay() {
     // ---- Implémentation de la quantité & l'obtention du prix total ---- //
     totalArticlesQuantity += parseInt(cart[i].nbArticle);
     totalArticlesPrice += parseInt(cart[i].nbArticle * price);
+    console.log(totalArticlesPrice);
 
     // ---- Injection des différents produits dans le HTML / Prix / Quantité ---- //
     let article = `<article class="cart__item" data-id="${cart[i].id}" data-color="${cart[i].color}">
@@ -145,15 +146,11 @@ async function cartDisplay() {
 }
 cartDisplay();
 
-// On récupère le prix de l'article suivant son id dans la l'API
+// ---- On récupère le prix de l'article suivant son id dans la l'API ---- //
 async function productId(prdId) {
   return fetch("http://localhost:3000/api/products/")
     .then(function (res) {
       return res.json();
-    })
-    .catch((err) => {
-      // Prévenir en cas d'erreur de chargement de l'API
-      console.log("erreur");
     })
     .then((response) => {
       for (let i = 0; i < response.length; i++) {
@@ -172,6 +169,27 @@ function uptQuantity() {}
 
 // ---------------- MISE À JOUR PANIER ---------------- //
 function uptBasket() {}
+
+// ---------------- SI PANIER VIDE ---------------- //
+// ---- Fonction de redirection vers l'accueil ---- //
+function redirectionIndex() {
+  document.location.href = "./index.html";
+}
+
+// ---- Condition si oui ou non on reste sur la page ---- //
+// ---- A venir modal ---- //
+function store() {
+  let store = localStorage.length;
+  console.log(store);
+
+  if (store < 1) {
+    alert("Merci de bien vouloir selectionner l'un de nos produits");
+    redirectionIndex();
+  } else {
+    console.log("Client approuvé");
+  }
+}
+store();
 
 //---------------------------------------//
 
