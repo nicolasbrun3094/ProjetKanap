@@ -95,8 +95,6 @@ const sofaDisplay = async () => {
 
       // ---------------- GESTION DES DONNÉES DU LOCAL STORAGE ---------------- //
 
-      let cartProduct = [];
-
       // Contient les propriétés assigné du produit
       const item = {
         id: sofaData._id,
