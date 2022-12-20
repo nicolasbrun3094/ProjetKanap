@@ -1,12 +1,12 @@
 // ---------------- REGEX DES INPUTS ---------------- //
 
 // ---- Ciblage de tous les inputs ---- //
-const inputs = document.querySelectorAll(
+const allInputs = document.querySelectorAll(
   'input[type="text"], input[type="email"]'
 );
 
 // ---- Checking des valeurs rentrer dans l'input ---- //
-inputs.forEach((input) => {
+allInputs.forEach((input) => {
   input.addEventListener("input", (e) => {
     switch (e.target.id) {
       case "firstName":
@@ -32,13 +32,16 @@ inputs.forEach((input) => {
 });
 
 // ---- Logique et fonctionnement des REGEX ---- //
+let nameCheckerRexp = /^[a-zA-Z éè]*$/;
+let fromCheckerRexp = /^[a-zA-Z0-9 éè]*$/;
+let emailCheckerRexp = /^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i;
 
 const firstNameChecker = (value) => {
   const errorDisplay = document.getElementById("firstNameErrorMsg");
   if (value.length > 0 && (value.length < 2 || value.length > 20)) {
     errorDisplay.textContent =
       "Veuillez entrer un prénom entre 2 et 20 lettres";
-  } else if (!value.match(/^[a-zA-Z éè]*$/)) {
+  } else if (!value.match(nameCheckerRexp)) {
     errorDisplay.textContent =
       "Veuillez ne pas inclure de chiffres ou caractères spéciaux ";
   } else {
@@ -51,7 +54,7 @@ const lastNameChecker = (value) => {
   if (value.length > 0 && (value.length < 2 || value.length > 20)) {
     errorDisplay.textContent =
       "Veuillez entrer un nom de famille entre 2 et 20 lettres";
-  } else if (!value.match(/^[a-zA-Z éè]*$/)) {
+  } else if (!value.match(nameCheckerRexp)) {
     errorDisplay.textContent =
       "Veuillez ne pas inclure de chiffres ou caractères spéciaux ";
   } else {
@@ -63,7 +66,7 @@ const addressChecker = (value) => {
   const errorDisplay = document.getElementById("addressErrorMsg");
   if (value.length > 0 && value.length < 3) {
     errorDisplay.textContent = "Veuillez saisir plus de cartères";
-  } else if (!value.match(/^[a-zA-Z0-9 éè]*$/)) {
+  } else if (!value.match(fromCheckerRexp)) {
     errorDisplay.textContent = "Veuillez ne pas inclure caractères spéciaux ";
   } else {
     errorDisplay.textContent = "";
@@ -72,7 +75,9 @@ const addressChecker = (value) => {
 
 const cityChecker = (value) => {
   const errorDisplay = document.getElementById("cityErrorMsg");
-  if (!value.match(/^[a-zA-Z0-9 éè]*$/)) {
+  if (value.length > 0 && value.length < 3) {
+    errorDisplay.textContent = "Veuillez saisir plus de cartères";
+  } else if (!value.match(fromCheckerRexp)) {
     errorDisplay.textContent = "Veuillez ne pas inclure caractères spéciaux ";
   } else {
     errorDisplay.textContent = "";
@@ -81,7 +86,7 @@ const cityChecker = (value) => {
 
 const emailChecker = (value) => {
   const errorDisplay = document.getElementById("emailErrorMsg");
-  if (!value.match(/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)) {
+  if (!value.match(emailCheckerRexp)) {
     errorDisplay.textContent = "Veuillez saisir une adresse mail correcte";
   } else {
     errorDisplay.textContent = "";
@@ -263,21 +268,11 @@ function store() {
 store();
 
 // ---------------- ENVOI DES DONNÉES ---------------- //
-/*
-function submitForm() {
-  alert("formulaire envoyé");
-  const form = document.querySelectorAll("form");
-  form.submit();
-}
-*/
-
-function redirectionConfirm() {
-  document.location.href = "./confirmation.html";
-}
 
 const orderButton = document.getElementById("order");
 orderButton.addEventListener("click", (e) => {
   e.preventDefault();
+
   // ---- Contrôle JS ---- //
   let inputs = document.querySelectorAll(".cart__order__form inputs");
   for (const input of inputs) {
@@ -285,8 +280,18 @@ orderButton.addEventListener("click", (e) => {
       alert("Veuillez saisir tout les champs");
     }
   }
+  // ---- Vérif formulaire ---- //
+  let form = document.querySelector(".cart__order__form");
+  let validForm =
+    nameCheckerRexp.test(form.firstName.value) &&
+    nameCheckerRexp.test(form.lastName.value) &&
+    fromCheckerRexp.test(form.address.value) &&
+    fromCheckerRexp.test(form.city.value) &&
+    emailCheckerRexp.test(form.email.value);
 
   // ---- Récupération des valeurs des inputs ---- //
+
+  let currentLocal = localStorage.getItem("cartObject");
 
   const formulaireValues = {
     firstName: document.getElementById("firstName").value,
@@ -296,15 +301,48 @@ orderButton.addEventListener("click", (e) => {
     email: document.getElementById("email").value,
   };
 
-  //redirectionConfirm(); // Pas de sécurité Nanvigateur ni JS
+  if (!validForm) {
+    alert("Veuillez remplir les champs manquants");
+    // let currentLocal = localStorage.getItem("cartObject") || [];
+  } else if (currentLocal.length == 0) {
+    alert("Votre Panier est vide");
+    redirectionIndex();
+  } else {
+    alert("Vos informations ont bien été enregistrées");
+  }
+
+  let orderLocalStorage = JSON.parse(localStorage.getItem("cartObject"));
+  let idProduct = [];
+  for (let i = 0; i < orderLocalStorage.length; i++) {
+    idProduct.push(orderLocalStorage[i].id);
+  }
+  console.log(idProduct);
+
+  const submit = {
+    products: idProduct,
+    contact: formulaireValues,
+  };
+
+  console.log(submit);
+
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify(submit),
+    headers: {
+      accept: "Application/JSON",
+      "Content-type": "Application/JSON",
+    },
+  })
+    .then(async (response) => response.json())
+
+    .then((data) => {
+      console.log(data);
+      console.log(data.orderId);
+      window.location.href = `confirmation.html?id=${data.orderId}`;
+    })
+    .catch((error) => {
+      console.error("Erreur serveur (fetch)", error);
+      alert("Un problème est survenu au niveau du serveur");
+      return;
+    });
 });
-
-//---------------------------------------//
-
-// Action lors du click sur le btn commander / envoi au local ou API ?
-// Page CONFIRM ->
-
-// PLAN DE TEST À FAIRE //
-// VALIDER LA COMMANDE //
-// ORAL //
-//---------------------------------------//
