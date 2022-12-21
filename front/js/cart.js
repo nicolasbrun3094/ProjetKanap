@@ -167,7 +167,7 @@ async function productId(prdId) {
 // ---------------- SUPPRESSION DE L'ARTICLE ---------------- //
 function deleteProduct() {
   let cartItem = JSON.parse(localStorage.getItem("cartObject"));
-  //console.log(cartItem);
+
   const deleteButtons = document.querySelectorAll(".deleteItem");
   deleteButtons.forEach((deleteButton) => {
     deleteButton.addEventListener("click", (event) => {
@@ -257,7 +257,6 @@ function redirectionIndex() {
 // ---- A venir modal ---- //
 function store() {
   let store = localStorage.length;
-  console.log(store);
   if (store < 1) {
     alert("Merci de bien vouloir selectionner l'un de nos produits");
     redirectionIndex();
@@ -317,14 +316,11 @@ orderButton.addEventListener("click", (e) => {
   for (let i = 0; i < orderLocalStorage.length; i++) {
     idProduct.push(orderLocalStorage[i].id);
   }
-  console.log(idProduct);
 
   const submit = {
     products: idProduct,
     contact: formulaireValues,
   };
-
-  console.log(submit);
 
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
