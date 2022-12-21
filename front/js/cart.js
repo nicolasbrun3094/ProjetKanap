@@ -303,6 +303,7 @@ orderButton.addEventListener("click", (e) => {
 
   if (!validForm) {
     alert("Veuillez remplir les champs manquants");
+    return;
     // let currentLocal = localStorage.getItem("cartObject") || [];
   } else if (currentLocal.length == 0) {
     alert("Votre Panier est vide");
