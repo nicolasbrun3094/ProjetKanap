@@ -31,7 +31,8 @@ allInputs.forEach((input) => {
   });
 });
 
-// ---- Logique et fonctionnement des REGEX ---- //
+// ---- Déclaration et fonctionnement des REGEX ---- //
+
 let nameCheckerRexp = /^[a-zA-Z éè]*$/;
 let fromCheckerRexp = /^[a-zA-Z0-9 éè]*$/;
 let emailCheckerRexp = /^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i;
@@ -95,6 +96,21 @@ const emailChecker = (value) => {
 
 // ---------------- RÉCUPÉRATION DU LOCAL STORAGE ---------------- //
 
+// ---- On récupère le prix de l'article suivant son id dans la l'API ---- //
+async function productId(prdId) {
+  return fetch("http://localhost:3000/api/products/")
+    .then(function (res) {
+      return res.json();
+    })
+    .then((response) => {
+      for (let i = 0; i < response.length; i++) {
+        if (response[i]._id == prdId) {
+          return response[i].price;
+        }
+      }
+    });
+}
+
 // ---- Converti la chaine de caractère objet JS ---- //
 let cart = JSON.parse(localStorage.getItem("cartObject"));
 
@@ -148,21 +164,6 @@ async function cartDisplay() {
   }
 }
 cartDisplay();
-
-// ---- On récupère le prix de l'article suivant son id dans la l'API ---- //
-async function productId(prdId) {
-  return fetch("http://localhost:3000/api/products/")
-    .then(function (res) {
-      return res.json();
-    })
-    .then((response) => {
-      for (let i = 0; i < response.length; i++) {
-        if (response[i]._id == prdId) {
-          return response[i].price;
-        }
-      }
-    });
-}
 
 // ---------------- SUPPRESSION DE L'ARTICLE ---------------- //
 function deleteProduct() {
@@ -248,13 +249,14 @@ async function updateBasket() {
 }
 
 // ---------------- SI PANIER VIDE ---------------- //
+
 // ---- Fonction de redirection vers l'accueil ---- //
+
 function redirectionIndex() {
   document.location.href = "./index.html";
 }
 
 // ---- Condition si oui ou non on reste sur la page ---- //
-// ---- A venir modal ---- //
 function store() {
   let store = localStorage.length;
   if (store < 1) {
@@ -280,7 +282,20 @@ orderButton.addEventListener("click", (e) => {
     }
   }
   // ---- Vérif formulaire ---- //
+
   let form = document.querySelector(".cart__order__form");
+
+  if (
+    document.getElementById("firstName").value == "" ||
+    document.getElementById("lastName").value == "" ||
+    document.getElementById("address").value == "" ||
+    document.getElementById("city").value == "" ||
+    document.getElementById("email").value == ""
+  ) {
+    alert("Veuillez saisir tous les champs requis");
+    return;
+  }
+
   let validForm =
     nameCheckerRexp.test(form.firstName.value) &&
     nameCheckerRexp.test(form.lastName.value) &&
@@ -303,7 +318,6 @@ orderButton.addEventListener("click", (e) => {
   if (!validForm) {
     alert("Veuillez remplir les champs manquants");
     return;
-    // let currentLocal = localStorage.getItem("cartObject") || [];
   } else if (currentLocal.length == 0) {
     alert("Votre Panier est vide");
     redirectionIndex();
