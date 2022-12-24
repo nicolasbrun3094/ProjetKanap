@@ -325,6 +325,8 @@ orderButton.addEventListener("click", (e) => {
     alert("Vos informations ont bien été enregistrées");
   }
 
+  // ---- ENVOI DES DONNÉES À API ---- //
+
   let orderLocalStorage = JSON.parse(localStorage.getItem("cartObject"));
   let idProduct = [];
   for (let i = 0; i < orderLocalStorage.length; i++) {
