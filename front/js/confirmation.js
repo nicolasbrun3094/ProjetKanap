@@ -7,4 +7,4 @@ console.log(orderId);
 document.getElementById("orderId").innerHTML = orderId;
 
 // Effacer tout le localStorage
-//localStorage.clear();
+localStorage.clear();
