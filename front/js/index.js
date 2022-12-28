@@ -19,10 +19,7 @@ const sofaDispaly = async () => {
           <article>
             <img src=${sofa.imageUrl} alt="photo de ${sofa.name}">
             <h3>${sofa.name}</h3>
-             <p>
-                Dis enim malesuada risus sapien gravida nulla nisl arcu.
-                Dis enim malesuada risus sapien gravida nulla nisl arcu.
-              </p>
+             <p>${sofa.description}</p>
               <p class="price">  
                 ${sofa.price} Є
               </p>

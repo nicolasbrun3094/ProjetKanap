@@ -33,10 +33,7 @@ const sofaDisplay = async () => {
   price.innerHTML = `<span>${sofaData.price}</span>`;
   img.innerHTML = `<img src=${sofaData.imageUrl} alt="photo de ${sofaData.name}"></img>`;
   desc.innerHTML = `
-                    <p>
-                        Dis enim malesuada risus sapien gravida nulla nisl arcu.</br>
-                        Dis enim malesuada risus sapien gravida nulla nisl arcu.
-                    </p>
+                    <p>${sofaData.description}</p>
                     `;
 
   let selectColor = `<option value="">--SVP, choissez une couleur --</option>`;

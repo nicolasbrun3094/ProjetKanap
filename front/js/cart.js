@@ -108,7 +108,8 @@ async function productId(prdId) {
           return response[i].price;
         }
       }
-    });
+    })
+    .catch(error.message);
 }
 
 // ---- Converti la chaine de caractère objet JS ---- //
@@ -349,8 +350,6 @@ orderButton.addEventListener("click", (e) => {
     .then(async (response) => response.json())
 
     .then((data) => {
-      console.log(data);
-      console.log(data.orderId);
       window.location.href = `confirmation.html?id=${data.orderId}`;
     })
     .catch((error) => {
