@@ -109,7 +109,11 @@ async function productId(prdId) {
         }
       }
     })
-    .catch(error.message);
+    .catch((error) => {
+      console.error("Erreur serveur (fetch)", error);
+      alert("Un problème est survenu au niveau du serveur");
+      return;
+    });
 }
 
 // ---- Converti la chaine de caractère objet JS ---- //
